@@ -41,12 +41,3 @@ It prints one line per golden case and locale, in the form `<ok|FAIL>  <locale> 
 | `src/moderation/moderate.ts` | Policy classifier (harassment, self-harm, private data, off-brand), fail-closed |
 | `src/i18n/worldReady.ts` | Number-format and script checks |
 | `scripts/ci-gate.ts` | The merge gate |
-
-## Status and limitations
-
-The gateway logic and CI gate are written; the pieces they plug into are not in the repository:
-
-- **Missing modules:** `src/model/client` (`callModel`), `src/prompts/registry` (`resolvePromptVersion`), and `src/eval/golden` (`GOLDEN`). There's also no `package.json` or `tsconfig.json`, so the gate can't run yet.
-- **No Postgres or ICU dependency in code yet.** Locale handling uses the built-in `Intl` API, and nothing is persisted.
-- **The number-format check is a coarse proxy.** It looks for the locale's grouping separator anywhere in the text, so a correct non-US answer that contains no numbers fails the check (verified for `ja-JP`). Checking only when digits are present would fix that.
-- The judge's JSON is parsed without validation; a malformed judge response throws rather than failing closed like moderation does.
